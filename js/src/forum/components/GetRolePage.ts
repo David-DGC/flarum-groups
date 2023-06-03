@@ -2,7 +2,6 @@ import {Vnode} from 'mithril';
 import app from 'flarum/forum/app';
 import Page from 'flarum/common/components/Page';
 import Button from 'flarum/common/components/Button';
-import AlertManager from 'flarum/common/components/AlertManager';
 import LoadingIndicator from 'flarum/common/components/LoadingIndicator';
 import GroupBadge from 'flarum/common/components/GroupBadge';
 import LogInModal from 'flarum/forum/components/LogInModal';
@@ -114,49 +113,6 @@ export default class GetRolePage extends Page {
                     });
                 },
             }, app.translator.trans(translationPrefix + 'apply'))),
-
-            m('.Form-group.Form--centered', [
-                Button.component({
-                    className: 'Button Button--primary Button--block',
-                    loading: this.loading,
-                    disabled: !user || user.groups().every(g => g.id() !== group.id()),
-                    onclick: () => {
-                        app.alerts.show(
-                            {
-                                type: 'confirm',
-                                title: app.translator.trans('flarum-ext-group-invitation.leave.title'),
-                                content: app.translator.trans('flarum-ext-group-invitation.leave.message'),
-                                onconfirm: () => {
-                                    this.loading = true;
-            
-                                    app.request({
-                                        url: app.forum.attribute('apiUrl') + '/group-invitations/' + (this.invitation as Invitation).code() + '/apply',
-                                        method: 'POST',
-                                        body: {
-                                            action: 'leave', // Add this line
-                                        },
-                                    }).then(() => {
-                                        this.loading = false;
-            
-                                        // Memorize success to show an alert after refresh
-                                        localStorage.setItem('groupInvitationSuccess', 'true');
-            
-                                        // Force a refresh to get the new badges and permissions
-                                        window.location = app.forum.attribute('baseUrl');
-                                    }).catch(e => {
-                                        this.loading = false;
-                                        m.redraw();
-                                        throw e;
-                                    });
-                                },
-                            },
-                            { className: 'Modal--small' }
-                        );
-                    },
-                }, app.translator.trans(translationPrefix + 'leave')),
-            ]),
-            
-
         ]);
     }
 }

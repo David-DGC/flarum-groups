@@ -16,10 +16,6 @@ clarkwinkelmann-group-invitation:
             no-usages-left: This group invitation can no longer be used.
         apply: Join group
         success-alert: You have successfully joined the group!
-        leave:
-            title: Leave group
-            message: Are you sure you want to leave the {group} group?
-            success-alert: You have successfully left the group!
 
     admin:
         permissions:
